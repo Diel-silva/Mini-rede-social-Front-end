@@ -22,6 +22,7 @@ const Usuarios = () => {
     }, [])
 
 
+
     function handlerExcluir(id: any): void {
         alert(id);
     }
@@ -61,7 +62,9 @@ const Usuarios = () => {
             </div>
 
             {usuarioEditar && (
-                <UsuarioEditar usuario={usuarioEditar} />
+                <UsuarioEditar usuario={usuarioEditar} 
+                onClose={() => setUsuarioEditar(null)
+            }/>
             )}
         </>
     )
