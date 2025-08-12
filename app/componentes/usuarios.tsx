@@ -1,30 +1,33 @@
 'use client'
 import { useEffect, useState } from "react"
-import { usuarioFindAll } from "./lib/api/usuarios"
+import { usuarioDelete, usuarioFindAll } from "./lib/api/usuarios"
 import UsuarioEditar from "./usuarioEditar";
 
 const Usuarios = () => {
     const [usuario, setUsuarios] = useState<any[]>([]);
     const [usuarioEditar, setUsuarioEditar] = useState<any | null>();
+    const [cadstrarUsuario, setCadastrarUsuario] = useState(false)
 
     useEffect(() => {
-        const fetchBuscaUsuario = async () => {
-            const response = await usuarioFindAll()
-            if (response) {
-                setUsuarios(response)
-            } else {
-                return [];
-            }
-
-        }
         fetchBuscaUsuario()
-
     }, [])
+    const fetchBuscaUsuario = async () => {
+        const response = await usuarioFindAll()
+        if (response) {
+            setUsuarios(response)
+        } else {
+            return [];
+        }
+    }
 
-
-
-    function handlerExcluir(id: any): void {
-        alert(id);
+    async function handlerExcluir(id: number): Promise<void> {
+        const response = await usuarioDelete(id);
+        if (response) { 
+            fetchBuscaUsuario();
+        }
+        else {
+            alert("Erro ao excluir o usuário");
+        };
     }
 
     function handlerEditar(usuario: any): void {
@@ -35,6 +38,7 @@ const Usuarios = () => {
         <>
             <div>
                 <h2>Lista de Usuários</h2>
+                <button onClick={() => setCadastrarUsuario(true)}>Adicionar usuário</button>
                 <table border={1} cellPadding={5} cellSpacing={0}>
                     <thead>
                         <tr>
@@ -62,9 +66,24 @@ const Usuarios = () => {
             </div>
 
             {usuarioEditar && (
-                <UsuarioEditar usuario={usuarioEditar} 
-                onClose={() => setUsuarioEditar(null)
-            }/>
+            <UsuarioEditar
+             usuario={usuarioEditar}
+                onClose={() => setUsuarioEditar(null)}
+                onAtualizar={async () => {
+                    await fetchBuscaUsuario();
+                    setUsuarioEditar(null);
+                }}
+            />
+            )}
+
+            {cadstrarUsuario && (
+            <UsuarioEditar
+                onClose={() => setCadastrarUsuario(false)}
+                onAtualizar={async () => {
+                    await fetchBuscaUsuario();
+                    setCadastrarUsuario(false);
+                }}
+            />
             )}
         </>
     )
