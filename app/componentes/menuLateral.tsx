@@ -6,18 +6,22 @@ const MenuLateral = () => {
     const pathname = usePathname();
 
     return (
-        <aside style={{ width: "200px", background: "#1976d2", color: "white", borderRight: "1px solid #ccc", padding: "20px"}}>
+        <aside style={{ width: "200px", background: "#1976d2", color: "white", borderRight: "1px solid #ccc", padding: "20px" }}>
             <h3>Menu</h3>
-            <ul style={{ listStyle: "none", padding: 0 }}>
+            <ul style={{ listStyle: "none", padding: 0, }}>
                 <li style={{
                     padding: "10px",
-                    background: pathname === "/" ? "#1565c0" : "transparent"
+                    background: pathname === "/" ? "#1565c0" : "transparent",
+                    borderRadius: "10px"
                 }}>
                     <Link href={"/"} style={{ textDecoration: "none", color: "inherit" }}>Home</Link>
                 </li>
 
-                <li
-                    style={{ padding: "10px", background: pathname === "/usuarios" ? "#1565c0" : "transparent" }}>
+                <li style={{
+                    padding: "10px",
+                    background: pathname === "/usuarios" ? "#1565c0" : "transparent",
+                    borderRadius: "10px"
+                }}>
                     <Link href={"/usuarios"} style={{ textDecoration: "none", color: "inherit" }}>Usuario</Link>
                 </li>
 

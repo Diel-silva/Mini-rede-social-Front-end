@@ -1,7 +1,8 @@
 'use client'
 import { useEffect, useState } from "react"
 import { usuarioDelete, usuarioFindAll } from "../componentes/lib/api/usuarios"
-import UsuarioEditar from "../componentes/usuarioEditar";
+import UsuarioEditar from "../componentes/usuarios/usuarioEditar";
+import "./page.css"
 
 const Usuarios = () => {
     const [usuario, setUsuarios] = useState<any[]>([]);
@@ -35,17 +36,18 @@ const Usuarios = () => {
     }
 
     return (
-        <>
+        <div className="table-conteiner">
             <div>
                 <h2>Lista de Usuários</h2>
-                <button onClick={() => setCadastrarUsuario(true)}>Adicionar usuário</button>
-                <table border={1} cellPadding={5} cellSpacing={0}>
+                <button className="btn-edit" onClick={() => setCadastrarUsuario(true)}>Adicionar usuário</button>
+                <table>
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nome do usuário</th>
                             <th>E-mail</th>
                             <th>Senha</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,8 +58,8 @@ const Usuarios = () => {
                                 <td>{usuario.email_usua}</td>
                                 <td>{usuario.senha_usua}</td>
                                 <td>
-                                    <button onClick={() => handlerEditar(usuario)}>Editar</button>
-                                    <button onClick={() => handlerExcluir(usuario.id)}>Excluir</button>
+                                    <button className="btn-edit" onClick={() => handlerEditar(usuario)}>Editar</button>
+                                    <button className="btn-delete" onClick={() => handlerExcluir(usuario.id)}>Excluir</button>
                                 </td>
                             </tr>
                         ))}
@@ -85,7 +87,7 @@ const Usuarios = () => {
                 }}
             />
             )}
-        </>
+        </div>
     )
 }
 
