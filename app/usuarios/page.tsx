@@ -3,10 +3,11 @@ import { useEffect, useState } from "react"
 import { usuarioDelete, usuarioFindAll } from "../componentes/lib/api/usuarios"
 import UsuarioEditar from "../componentes/usuarios/usuarioEditar";
 import "./page.css"
+import { typeUsuarios } from "../types/types";
 
 const Usuarios = () => {
-    const [usuario, setUsuarios] = useState<any[]>([]);
-    const [usuarioEditar, setUsuarioEditar] = useState<any | null>();
+    const [usuario, setUsuarios] = useState<typeUsuarios[]>([]);
+    const [usuarioEditar, setUsuarioEditar] = useState<typeUsuarios | null>();
     const [cadstrarUsuario, setCadastrarUsuario] = useState(false)
 
     useEffect(() => {
@@ -31,7 +32,7 @@ const Usuarios = () => {
         };
     }
 
-    function handlerEditar(usuario: any): void {
+    function handlerEditar(usuario: typeUsuarios): void {
         setUsuarioEditar(usuario);
     }
 
@@ -56,10 +57,10 @@ const Usuarios = () => {
                                 <td>{usuario.id}</td>
                                 <td>{usuario.nome_usua}</td>
                                 <td>{usuario.email_usua}</td>
-                                <td>{usuario.senha_usua}</td>
+                                <td>{"*".repeat(usuario.senha_usua.length)}</td>
                                 <td>
                                     <button className="btn-edit" onClick={() => handlerEditar(usuario)}>Editar</button>
-                                    <button className="btn-delete" onClick={() => handlerExcluir(usuario.id)}>Excluir</button>
+                                    <button className="btn-delete" onClick={() => handlerExcluir(usuario.id!)}>Excluir</button>
                                 </td>
                             </tr>
                         ))}
