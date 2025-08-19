@@ -31,7 +31,7 @@ const MenuLateral = () => {
             </button>
 
             <h3>Menu</h3>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, width: "100px"}}>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, width: "100%"}}>
                 <li style={{
                     padding: "10px",
                     background: pathname === "/" ? "#1565c0" : "transparent",
@@ -58,6 +58,20 @@ const MenuLateral = () => {
                      style={{
                      textDecoration: "none",
                      color: "inherit" }}>👤{colapsado ? "" : "Usuario"}</Link>
+                </li>
+
+                <li style={{
+                    padding: "10px",
+                    background: pathname === "/postagens" ? "#1565c0" : "transparent",
+                    borderRadius: "10px",
+                    textAlign: colapsado ? "center" : "left"
+                }}>
+                    <Link href={"/postagens"}
+                     style={{
+                     textDecoration: "none",
+                     color: "inherit",
+                     gap: colapsado ? 0 : "10px" }}>💬 {colapsado ? "" : "postagens"}</Link>
+                     
                 </li>
 
             </ul>
