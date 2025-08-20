@@ -1,66 +1,79 @@
-'use client'
+"use client"
+
 import { useEffect, useState } from "react"
-import { usuarioDelete, usuarioFindAll } from "../componentes/lib/api/usuarios"
 import UsuarioEditar from "../componentes/usuarios/usuarioEditar";
 import "./page.css"
 import { typeUsuarios } from "../types/types";
+import { usuarioDelete, usuarioFindAll } from "../componentes/lib/api/usuarios";
 
 const Usuarios = () => {
-    const [usuario, setUsuarios] = useState<typeUsuarios[]>([]);
-    const [usuarioEditar, setUsuarioEditar] = useState<typeUsuarios | null>();
-    const [cadstrarUsuario, setCadastrarUsuario] = useState(false)
+    const [usuarios, setUsuarios] = useState<typeUsuarios[]>([]);
+    const [usuarioSelecionado, setUsuarioSelecionado] = useState<typeUsuarios | null>();
+    const [cadastrarUsuario, setCadastrarUsuario] = useState(false);
+    const [senhaVisivel, setSenhaVisivel] = useState<Record<number, boolean>>({});
 
     useEffect(() => {
-        fetchBuscaUsuario()
-    }, [])
+        fetchBuscaUsuario();
+    }, []);
+
     const fetchBuscaUsuario = async () => {
         const response = await usuarioFindAll()
         if (response) {
             setUsuarios(response)
         } else {
-            return [];
-        }
-    }
-
-    async function handlerExcluir(id: number): Promise<void> {
-        const response = await usuarioDelete(id);
-        if (response) { 
-            fetchBuscaUsuario();
-        }
-        else {
-            alert("Erro ao excluir o usuário");
+            return []
         };
+    };
+
+    const handleEditar = (usuario: typeUsuarios) => {
+        setUsuarioSelecionado(usuario);
     }
 
-    function handlerEditar(usuario: typeUsuarios): void {
-        setUsuarioEditar(usuario);
+    const handleExcluir = async (id: number) => {
+
+        const response = await usuarioDelete(id);
+
+        if (response) {
+            alert("Usuário excluido com sucesso")
+            fetchBuscaUsuario();
+        } else {
+            alert("Erro ao excluir o usuário")
+        }
     }
+
+    const handleSenha = (id: number) => {
+        setSenhaVisivel((prev) => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
 
     return (
-        <div className="table-conteiner">
+        <div className="table-container">
             <div>
-                <h2>Lista de Usuários</h2>
-                <button className="btn-edit" onClick={() => setCadastrarUsuario(true)}>Adicionar usuário</button>
+                <h2>Lista de Uusários</h2>
+                <button className="btn-edit" onClick={() => setCadastrarUsuario(true)}>Adicionar</button>
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nome do usuário</th>
+                            <th>Nome</th>
                             <th>E-mail</th>
                             <th>Senha</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {usuario.map((usuario) => (
+                        {usuarios.map((usuario) => (
                             <tr key={usuario.id}>
                                 <td>{usuario.id}</td>
                                 <td>{usuario.nome_usua}</td>
                                 <td>{usuario.email_usua}</td>
-                                <td>{"*".repeat(usuario.senha_usua.length)}</td>
+                                <td>{senhaVisivel[usuario.id!] ? usuario.senha_usua : "*".repeat(usuario.senha_usua.length)}</td>
                                 <td>
-                                    <button className="btn-edit" onClick={() => handlerEditar(usuario)}>Editar</button>
-                                    <button className="btn-delete" onClick={() => handlerExcluir(usuario.id!)}>Excluir</button>
+                                    <button className="btn-edit" onClick={() => handleSenha(usuario.id!)}>{senhaVisivel[usuario.id!] ? "👁️" : "👀"}</button>
+                                    <button className="btn-edit" onClick={() => handleEditar(usuario)}>Editar</button>
+                                    <button className="btn-delete" onClick={() => handleExcluir(usuario.id!)}>Excluir</button>
                                 </td>
                             </tr>
                         ))}
@@ -68,28 +81,28 @@ const Usuarios = () => {
                 </table>
             </div>
 
-            {usuarioEditar && (
-            <UsuarioEditar
-             usuario={usuarioEditar}
-                onClose={() => setUsuarioEditar(null)}
-                onAtualizar={async () => {
-                    await fetchBuscaUsuario();
-                    setUsuarioEditar(null);
-                }}
-            />
+            {usuarioSelecionado && (
+                <UsuarioEditar
+                    usuario={usuarioSelecionado}
+                    onClose={() => setUsuarioSelecionado(null)}
+                    onAtualizar={async () => {
+                        await fetchBuscaUsuario();
+                        setUsuarioSelecionado(null);
+                    }}
+                />
             )}
 
-            {cadstrarUsuario && (
-            <UsuarioEditar
-                onClose={() => setCadastrarUsuario(false)}
-                onAtualizar={async () => {
-                    await fetchBuscaUsuario();
-                    setCadastrarUsuario(false);
-                }}
-            />
+            {cadastrarUsuario && (
+                <UsuarioEditar
+                    onClose={() => setCadastrarUsuario(false)}
+                    onAtualizar={async () => {
+                        await fetchBuscaUsuario();
+                        setCadastrarUsuario(false);
+                    }}
+                />
             )}
         </div>
-    )
-}
+    );
+};
 
 export default Usuarios
